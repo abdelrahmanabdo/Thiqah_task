@@ -34,18 +34,17 @@ export class FilesController {
     )
     file: Express.Multer.File,
   ) {
-    const newFile = this.filesService.saveFile(file);
+    try {
+      const newFile = this.filesService.saveFile(file);
+      this.cacheManager.set(file.filename, newFile);
 
-    if (!newFile) {
+      return {
+        status: 'success',
+        filePath: newFile,
+        expiration: FILE_PATH_EXPIRATION_TIME,
+      };
+    } catch (err) {
       throw new Error('Error while saving file');
     }
-
-    this.cacheManager.set(file.filename, newFile);
-
-    return {
-      status: 'success',
-      filePath: newFile,
-      expiration: FILE_PATH_EXPIRATION_TIME,
-    };
   }
 }

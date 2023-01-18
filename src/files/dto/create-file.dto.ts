@@ -1,1 +1,4 @@
-export class CreateFileDto {}
+export class CreateFileDto {
+  id: number;
+  path: string;
+}
